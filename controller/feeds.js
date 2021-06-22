@@ -3,7 +3,7 @@ const Post=require('../models/posts');
 const path=require('path')
 const fs=require('fs');
 const User=require('../models/user');
-const io=require('../socket');
+
 let totalItems;
 exports.getPosts=async (req,res,next)=>{
     let currentPage=req.query.page||1;
@@ -53,7 +53,7 @@ exports.createPosts=async (req,res,next)=>{
     const user= await User.findById(req.userId);
     user.posts.push(post);
     const savedUser=await user.save();
-    io.getIO().emit('post',{action:'create',post:post});
+   // io.getIO().emit('post',{action:'create',post:post});
             res.status(201).json({
             message:"Post created successfully",
             post:post,
@@ -135,8 +135,8 @@ exports.updatePost=(req,res,next)=>{
     })
     .then(result=>{
         console.log(result)
-        console.log('IO will emit')
-        io.getIO().emit('post',{action:'update',post:result})
+        //console.log('IO will emit')
+       //io.getIO().emit('post',{action:'update',post:result})
         res.status(200).json({message:'post updated',post:result} );
     })
     .catch(err=>{
@@ -173,7 +173,7 @@ exports.deletePost=(req,res,next)=>{
             return user.save();
         })
         .then(afterSave=>{
-            io.getIO().emit('post',{action:'delete',post:postId});
+            //io.getIO().emit('post',{action:'delete',post:postId});
                 res.status(200).json({message:'Deleted Post'})
         })
         .catch(err=>{
