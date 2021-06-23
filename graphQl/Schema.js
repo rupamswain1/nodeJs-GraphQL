@@ -1,7 +1,7 @@
 const {buildSchema}=require('graphql');
 
 module.exports = buildSchema(` 
-    tyope:Post{
+    type Post{
         _id:ID!
         title:String!
         content:String!
@@ -12,11 +12,30 @@ module.exports = buildSchema(`
     }
     type User{
         _id:ID!
-        name?:String!
+        name:String!
         email:String!
         password:String,
         status:String!
-        posts:[]
+        posts:[Post!]!
 
+    }
+
+    input UserInputData{
+        email:String!
+        name:String!
+        password:String!
+    }
+
+    type RootQuery{
+        hello:String
+    }
+    
+    type RootMutation{
+        createdUser(userInput:UserInputData):User!
+    }
+
+    schema{
+        query:RootQuery
+        mutation:RootMutation
     }
 `)

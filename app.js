@@ -55,10 +55,11 @@ app.use((error,req,res,next)=>{
 
 app.use('/graphql',graphqlHTTP({
     schema:graphQlSchema,
-    rootValue:graphQlResolver
+    rootValue:graphQlResolver,
+    graphiql:true
 }))
 
-mongoose.connect('mongodb+srv://rupam123:rupam123@nodecluster.plaky.mongodb.net/NodeRest?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://rupam123:rupam123@nodecluster.plaky.mongodb.net/NodeGraphQL?retryWrites=true&w=majority')
 .then(result=>{
     console.log('<<<<<<<<<<<<server is up and Running>>>>>>>>>>>>>>>>>>>>>>>>')
    app.listen(8000);
