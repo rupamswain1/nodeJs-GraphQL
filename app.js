@@ -38,6 +38,9 @@ app.use((req,res,next)=>{
     res.setHeader('Access-Control-Allow-Origin','*');
     res.setHeader('Access-Control-Allow-Methods', "OPTIONS, GET, POST, PUT, PATCH, DELETE");
     res.setHeader('Access-Control-Allow-Headers','Content-Type,Authorization');
+    if(req.method==='OPTIONS'){
+        return res.sendStatus(200)
+    }
     next();
 })
 app.use(multer({storage:fileStorage,fileFilter:fileFilter}).single('image'));
@@ -56,7 +59,16 @@ app.use((error,req,res,next)=>{
 app.use('/graphql',graphqlHTTP({
     schema:graphQlSchema,
     rootValue:graphQlResolver,
-    graphiql:true
+    graphiql:true,
+    customFormatErrorFn(err){
+        if(!err.originalError){
+            return err;
+        }
+        const data=err.originalError.data;
+        const message=err.message||'An Error Occured';
+        const code=err.originalError.code||500;
+        return {message:message,status:code,data:data}
+    }
 }))
 
 mongoose.connect('mongodb+srv://rupam123:rupam123@nodecluster.plaky.mongodb.net/NodeGraphQL?retryWrites=true&w=majority')
