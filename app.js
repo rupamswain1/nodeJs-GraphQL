@@ -9,7 +9,7 @@ const multer=require('multer');
 const { Result } = require('express-validator');
 const { graphqlHTTP }=require('express-graphql');
 const app=express();0
-
+const auth=require('./middleware/is-auth')
 const graphQlSchema=require('./graphQl/Schema');
 const graphQlResolver=require('./graphQl/resolver');
 
@@ -55,7 +55,7 @@ app.use((error,req,res,next)=>{
     const data=error.data;
     res.status(status).json({message:message,data:data});
 })
-
+app.use(auth);
 app.use('/graphql',graphqlHTTP({
     schema:graphQlSchema,
     rootValue:graphQlResolver,
