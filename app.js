@@ -13,6 +13,7 @@ const auth=require('./middleware/is-auth')
 const graphQlSchema=require('./graphQl/Schema');
 const graphQlResolver=require('./graphQl/resolver');
 const fs=require('fs');
+const {clearImage}=require('./util/file');
 
 const fileStorage = multer.diskStorage({
     destination: './images/',
@@ -24,6 +25,7 @@ const fileStorage = multer.diskStorage({
     },
   });
 const fileFilter=(req,file,cb)=>{
+    console.log(file.mimetype)
     if(file.mimetype==='image/png'||file.mimetype==='image/jpg'||file.mimetype==='image/jpeg'){
         cb(null,true);
     }
@@ -88,13 +90,11 @@ app.use('/graphql',graphqlHTTP({
 
 mongoose.connect('mongodb+srv://rupam123:rupam123@nodecluster.plaky.mongodb.net/NodeGraphQL?retryWrites=true&w=majority')
 .then(result=>{
+    console.log('');
+    console.log('');
     console.log('<<<<<<<<<<<<server is up and Running>>>>>>>>>>>>>>>>>>>>>>>>')
    app.listen(8000);
     
 })
 .catch(err=>console.log(err)) 
 
-const clearImage=filePath=>{
-    filePath=path.join(__dirname,'..',filePath);
-    fs.unlink(filePath,err=>console.log(err));
-}
