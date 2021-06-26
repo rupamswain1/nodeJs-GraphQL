@@ -12,7 +12,7 @@ const app=express();0
 const auth=require('./middleware/is-auth')
 const graphQlSchema=require('./graphQl/Schema');
 const graphQlResolver=require('./graphQl/resolver');
-
+const fs=require('fs');
 
 const fileStorage = multer.diskStorage({
     destination: './images/',
@@ -55,7 +55,22 @@ app.use((error,req,res,next)=>{
     const data=error.data;
     res.status(status).json({message:message,data:data});
 })
+
 app.use(auth);
+
+app.put('/post-image',(req,res,next)=>{
+    if(!req.isAuth){
+        throw new Error('Not authenticated!');
+    }
+    if(!req.file){
+        return res.status(200).json({message:'No File Provided'});
+    }
+    if(req.body.data){
+        clearImage(req.body.oldPath)
+    }
+    return res.status(201).json({message:'File stored',filePath:req.file.path})
+})
+
 app.use('/graphql',graphqlHTTP({
     schema:graphQlSchema,
     rootValue:graphQlResolver,
@@ -78,3 +93,8 @@ mongoose.connect('mongodb+srv://rupam123:rupam123@nodecluster.plaky.mongodb.net/
     
 })
 .catch(err=>console.log(err)) 
+
+const clearImage=filePath=>{
+    filePath=path.join(__dirname,'..',filePath);
+    fs.unlink(filePath,err=>console.log(err));
+}
