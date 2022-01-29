@@ -88,7 +88,7 @@ app.use('/graphql',graphqlHTTP({
     }
 }))
 
-mongoose.connect('mongodb+srv://rupam123:rupam123@nodecluster.plaky.mongodb.net/NodeGraphQL?retryWrites=true&w=majority')
+mongoose.connect('')//Enter the mongoDB key here
 .then(result=>{
     console.log('');
     console.log('');
